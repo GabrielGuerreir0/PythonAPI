@@ -114,3 +114,7 @@ This is a simple FastAPI application that provides CRUD operations for a healthc
 - **hora**: String
 
 ---
+
+### Requisições
+
+- para testar as requisições do projeto utilize o **Postman** e abra o arquivo **Consultas Medicas.postman_collection.json**.
