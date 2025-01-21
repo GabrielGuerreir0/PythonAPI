@@ -36,8 +36,9 @@ class Consulta(Base):
     medico_id = Column(Integer, ForeignKey("medicos.id"), nullable=False)
     data = Column(Date, nullable=False)
     hora = Column(Time, nullable=False)
+    descricao = Column(String, nullable=True)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), default=None, onupdate=func.now())
 
-    paciente = relationship("Paciente", back_populates="consultas")  # Relacionamento explícito
-    medico = relationship("Medico", back_populates="consultas")  # Relacionamento explícito
+    paciente = relationship("Paciente", back_populates="consultas")
+    medico = relationship("Medico", back_populates="consultas")

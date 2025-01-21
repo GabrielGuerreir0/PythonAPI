@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import models, schemas
 from app.database import SessionLocal
+from datetime import datetime
 
 router = APIRouter()
 
@@ -14,12 +15,22 @@ def get_db():
 
 # Rota para criar uma consulta
 @router.post("/", response_model=schemas.ConsultaOut)
-def create_consulta(consulta: schemas.ConsultaCreate, db: Session = Depends(get_db)):
+async def create_consulta(consulta: schemas.ConsultaCreate, db: Session = Depends(get_db)):
+    print(f"Recebido data: {consulta.data}, Tipo: {type(consulta.data)}")  # Log para depuração
+    print(f"Recebido hora: {consulta.hora}, Tipo: {type(consulta.hora)}")  # Log para depuração
+
+    try:
+        data_obj = consulta.data  # Já é datetime.date
+        hora_obj = consulta.hora  # Já é datetime.time
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Erro ao processar data ou hora: {str(e)}")
+    
     db_consulta = models.Consulta(
         paciente_id=consulta.paciente_id,
         medico_id=consulta.medico_id,
-        data=consulta.data,
-        horario=consulta.horario
+        data=data_obj,
+        hora=hora_obj,
+        descricao=consulta.descricao
     )
     db.add(db_consulta)
     db.commit()
@@ -47,12 +58,20 @@ def update_consulta(consulta_id: int, consulta: schemas.ConsultaCreate, db: Sess
     if not db_consulta:
         raise HTTPException(status_code=404, detail="Consulta não encontrada")
     
-    db_consulta.paciente_id = consulta.paciente_id
-    db_consulta.medico_id = consulta.medico_id
-    db_consulta.data = consulta.data
-    db_consulta.horario = consulta.horario
-    db.commit()
-    db.refresh(db_consulta)
+    try:
+        # Atualizando os campos
+        db_consulta.paciente_id = consulta.paciente_id
+        db_consulta.medico_id = consulta.medico_id
+        db_consulta.data = consulta.data  # Atualizando com 'data' recebida
+        db_consulta.hora = consulta.hora  # Atualizando com 'hora' recebida
+        db_consulta.descricao = consulta.descricao  # Atualizando com 'descricao'
+        
+        # Commit e refresh para garantir que a atualização seja salva
+        db.commit()
+        db.refresh(db_consulta)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Erro ao processar data ou hora: {str(e)}")
+    
     return db_consulta
 
 # Rota para deletar uma consulta

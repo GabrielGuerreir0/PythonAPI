@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Pacientes</title>
+</head>
+
+<body class="bg-gray-100">
+  <nav class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between">
+        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+          </button>
+        </div>
+        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div class="flex shrink-0 items-center">
+            <img class="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+          </div>
+          <div class="hidden sm:ml-6 sm:block">
+            <div class="flex space-x-4">
+              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+              <a href="/" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Home</a>
+              <a href="./listaMedicos" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Medicos</a>
+              <a href="./listaPacientes" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Pacientes</a>
+              <a href="./listaConsultas" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Consultas</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto py-12">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Lista de Pacientes</h1>
+
+    <!-- Botão para adicionar paciente -->
+    <div class="text-right mb-4">
+      <button onclick="abrirModal('addModal')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Adicionar Paciente</button>
+    </div>
+
+    <!-- Tabela -->
+    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+      <thead class="bg-gray-800 text-white">
+        <tr>
+          <th class="py-3 px-6 text-left">ID</th>
+          <th class="py-3 px-6 text-left">Nome</th>
+          <th class="py-3 px-6 text-left">Idade</th>
+          <th class="py-3 px-6 text-left">Histórico Médico</th>
+          <th class="py-3 px-6 text-center">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="table-body" class="text-gray-700">
+        <!-- Linhas dinâmicas serão inseridas aqui -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal para Adicionar Paciente -->
+  <div id="addModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-96">
+      <h2 class="text-lg font-bold mb-4">Adicionar Paciente</h2>
+      <form id="form-add">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Nome</label>
+          <input type="text" id="nome" name="nome" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Idade</label>
+          <input type="number" id="idade" name="idade" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Histórico Médico</label>
+          <input type="text" id="historico_medico" name="historico_medico" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="text-right">
+          <button type="button" onclick="fecharModal('addModal')" class="mr-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancelar</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para Editar Paciente -->
+  <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-96">
+      <h2 class="text-lg font-bold mb-4">Editar Paciente</h2>
+      <form id="form-edit">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Nome</label>
+          <input type="text" id="edit-nome" name="nome" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Idade</label>
+          <input type="number" id="edit-idade" name="idade" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Histórico Médico</label>
+          <input type="text" id="edit-historico_medico" name="historico_medico" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="text-right">
+          <button type="button" onclick="fecharModal('editModal')" class="mr-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancelar</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const apiUrl = "http://127.0.0.1:8000/pacientes";
+
+    // Função para buscar a lista de pacientes
+    async function fetchPacientes() {
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        const tableBody = document.getElementById("table-body");
+        tableBody.innerHTML = "";
+
+        data.forEach(paciente => {
+          const row = `
+            <tr class="border-b border-gray-200">
+              <td class="py-3 px-6">${paciente.id}</td>
+              <td class="py-3 px-6">${paciente.nome}</td>
+              <td class="py-3 px-6">${paciente.idade}</td>
+              <td class="py-3 px-6">${paciente.historico_medico}</td>
+              <td class="py-3 px-6 text-center">
+                <button onclick="editarPaciente(${paciente.id})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Editar</button>
+                <button onclick="deletarPaciente(${paciente.id})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Excluir</button>
+              </td>
+            </tr>
+          `;
+          tableBody.insertAdjacentHTML("beforeend", row);
+        });
+      } catch (error) {
+        console.error("Erro:", error);
+      }
+    }
+
+    // Função para abrir um modal
+    function abrirModal(id) {
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    // Função para fechar um modal
+    function fecharModal(id) {
+      document.getElementById(id).classList.add("hidden");
+    }
+
+    // Função para adicionar paciente
+    document.getElementById("form-add").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nome = document.getElementById("nome").value;
+      const idade = document.getElementById("idade").value;
+      const historico_medico = document.getElementById("historico_medico").value;
+
+      try {
+        await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome, idade, historico_medico })
+        });
+        fecharModal("addModal");
+        fetchPacientes();
+      } catch (error) {
+        console.error("Erro ao adicionar paciente:", error);
+      }
+    });
+
+    // Função para excluir paciente
+    async function deletarPaciente(id) {
+      try {
+        await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
+        fetchPacientes();
+      } catch (error) {
+        console.error("Erro ao excluir paciente:", error);
+      }
+    }
+
+    // Função para editar paciente
+    async function editarPaciente(id) {
+      try {
+        const response = await fetch(`${apiUrl}/${id}`);
+        const paciente = await response.json();
+
+        document.getElementById("edit-nome").value = paciente.nome;
+        document.getElementById("edit-idade").value = paciente.idade;
+        document.getElementById("edit-historico_medico").value = paciente.historico_medico;
+
+        abrirModal('editModal');
+
+        document.getElementById("form-edit").onsubmit = async function (e) {
+          e.preventDefault();
+          const nome = document.getElementById("edit-nome").value;
+          const idade = document.getElementById("edit-idade").value;
+          const historico_medico = document.getElementById("edit-historico_medico").value;
+
+          try {
+            await fetch(`${apiUrl}/${id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ nome, idade, historico_medico })
+            });
+            fecharModal("editModal");
+            fetchPacientes();
+          } catch (error) {
+            console.error("Erro ao editar paciente:", error);
+          }
+        };
+
+      } catch (error) {
+        console.error("Erro ao buscar paciente:", error);
+      }
+    }
+
+    // Chamar função ao carregar a página
+    window.onload = fetchPacientes;
+  </script>
+</body>
+
+</html>
