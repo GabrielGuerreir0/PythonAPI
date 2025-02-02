@@ -1,66 +1,104 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
-from datetime import time, date
+from datetime import time, date, datetime
 
-# Modelo para criação de um paciente
+# -------- Paciente --------
 class PacienteCreate(BaseModel):
-    nome: str
-    idade: int
-    historico_medico: str
+    nome: str = Field(..., min_length=2, max_length=50)
+    idade: int = Field(..., gt=0, lt=150)
+    historico_medico: Optional[str] = Field(None, max_length=500)
 
     class Config:
-        from_attributes = True  
+        from_orm = True
 
-# Modelo para o retorno de informações sobre o paciente
+
 class PacienteOut(PacienteCreate):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
-        from_attributes = True
+        from_orm = True
 
-# Modelo para atualização de um paciente
+
 class PacienteUpdate(BaseModel):
-    nome: Optional[str]
-    idade: Optional[int]
-    historico_medico: Optional[str]
+    nome: Optional[str] = Field(None, min_length=2, max_length=50)
+    idade: Optional[int] = Field(None, gt=0, lt=150)
+    historico_medico: Optional[str] = Field(None, max_length=500)
 
     class Config:
-        from_attributes = True
+        from_orm = True
 
-# Modelo para um médico
+
+# -------- Médico --------
 class MedicoBase(BaseModel):
-    nome: str
-    especialidade: str
+    nome: str = Field(..., min_length=2, max_length=50)
+    especialidade: str = Field(..., min_length=3, max_length=100)
 
     class Config:
-        from_attributes = True
+        from_orm = True
+
 
 class MedicoCreate(MedicoBase):
-    pass  
+    pass
+
 
 class MedicoOut(MedicoBase):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
-        from_attributes = True
+        from_orm = True
 
-# Modelo para consulta
+
+# -------- Consulta --------
 class ConsultaCreate(BaseModel):
     paciente_id: int
     medico_id: int
     data: date
     hora: time
-    descricao: str
+    descricao: Optional[str] = Field(None, max_length=500)
 
     class Config:
-        from_attributes = True
+        from_orm = True
+
 
 class ConsultaOut(ConsultaCreate):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
-        from_attributes = True
+        from_orm = True
 
-# Modelo para retorno de erro, caso necessário
+
+# -------- Usuário --------
+class UserCreate(BaseModel):
+    username: str = Field(..., min_length=3, max_length=20)
+    email: EmailStr
+    full_name: Optional[str] = Field(None, max_length=50)
+    password: str = Field(..., min_length=6)
+
+    class Config:
+        from_orm = True
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+# -------- Autenticação --------
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+
+# -------- Resposta de Erro --------
 class ErrorResponse(BaseModel):
     detail: str

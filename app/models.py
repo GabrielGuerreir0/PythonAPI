@@ -3,6 +3,21 @@ from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP, Date, Tim
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
+
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    full_name = Column(String, nullable=True)
+    hashed_password = Column(String, nullable=False)
+    disabled = Column(Integer, default=0)
+
+    def __repr__(self):
+        return f"<User(username={self.username}, email={self.email})>"
+
+
 class Paciente(Base):
     __tablename__ = 'pacientes'
 
@@ -13,7 +28,15 @@ class Paciente(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), default=None, onupdate=func.now())
 
-    consultas = relationship("Consulta", back_populates="paciente")  # Relacionamento explícito
+    # Relacionamento com Consulta
+    consultas = relationship(
+        "Consulta",
+        back_populates="paciente",
+        cascade="all, delete-orphan"
+    )
+
+    def __repr__(self):
+        return f"<Paciente(nome={self.nome}, idade={self.idade})>"
 
 
 class Medico(Base):
@@ -25,7 +48,15 @@ class Medico(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), default=None, onupdate=func.now())
 
-    consultas = relationship("Consulta", back_populates="medico")  # Relacionamento explícito
+    # Relacionamento com Consulta
+    consultas = relationship(
+        "Consulta",
+        back_populates="medico",
+        cascade="all, delete-orphan"
+    )
+
+    def __repr__(self):
+        return f"<Medico(nome={self.nome}, especialidade={self.especialidade})>"
 
 
 class Consulta(Base):
@@ -40,5 +71,9 @@ class Consulta(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), default=None, onupdate=func.now())
 
+    # Relacionamentos com Paciente e Medico
     paciente = relationship("Paciente", back_populates="consultas")
     medico = relationship("Medico", back_populates="consultas")
+
+    def __repr__(self):
+        return f"<Consulta(data={self.data}, hora={self.hora}, paciente_id={self.paciente_id}, medico_id={self.medico_id})>"

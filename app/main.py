@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
-from app.routes import paciente, medico, consulta 
+from app.routes import paciente, medico, consulta, register, auth
 
 # Cria as tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
@@ -31,9 +31,15 @@ templates = Jinja2Templates(directory="app/templates")
 app.include_router(paciente.router, tags=["Pacientes"], prefix="/pacientes")
 app.include_router(medico.router, tags=["Medicos"], prefix="/medicos")
 app.include_router(consulta.router, tags=["Consultas"], prefix="/consultas")
+app.include_router(register.router, tags=["Cadastrar"], prefix="/cadastrar")
+app.include_router(auth.router, tags=["Autenticar"], prefix="/login")
 
 # Rota de verificação de saúde
 @app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@app.get("/home", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
