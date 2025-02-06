@@ -54,3 +54,7 @@ async def root(request: Request):
 @app.get("/listaConsultas", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse("consulta.html", {"request": request})
+
+@app.get("/perfil", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse("perfil.html", {"request": request})

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import time, date, datetime
+from fastapi import UploadFile, File
 
 # -------- Paciente --------
 class PacienteCreate(BaseModel):
@@ -79,10 +80,21 @@ class UserCreate(BaseModel):
     email: EmailStr
     full_name: Optional[str] = Field(None, max_length=50)
     password: str = Field(..., min_length=6)
+    profile_image: Optional[UploadFile] = None
 
     class Config:
         from_orm = True
 
+class UserOut(BaseModel):
+    id: int
+    username: str
+    email: str
+    full_name: Optional[str] = None
+    profile_image: Optional[str] = None  # Agora suporta Base64
+
+
+    class Config:
+        orm_mode = True
 
 class UserLogin(BaseModel):
     username: str

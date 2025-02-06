@@ -1,7 +1,8 @@
 from .database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP, Date, Time
+from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP, Date, Time, LargeBinary
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from sqlalchemy.dialects.mysql import LONGBLOB
 
 
 class User(Base):
@@ -13,6 +14,7 @@ class User(Base):
     full_name = Column(String, nullable=True)
     hashed_password = Column(String, nullable=False)
     disabled = Column(Integer, default=0)
+    profile_image = Column(LargeBinary, nullable=True)  # Campo para armazenar o caminho da imagem
 
     def __repr__(self):
         return f"<User(username={self.username}, email={self.email})>"
