@@ -8,39 +8,43 @@
   <title>Perfil</title>
 </head>
 
-<body>
-  <nav class="bg-gray-800">
+<body class="bg-blue-300 min-h-screen flex flex-col">
+  <nav class="bg-blue-900">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
+          <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+          </button>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex shrink-0 items-center">
-            <img class="h-8 w-auto" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+            <img class="h-10 w-auto" src="/static/images/ClinicFlow.png" alt="ClinicFlow">
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <a href="/home" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Home</a>
-              <a href="./listaMedicos" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Medicos</a>
-              <a href="./listaPacientes" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Pacientes</a>
-              <a href="./listaConsultas" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Consultas</a>
-              <a href="/perfil" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Perfil</a>
+              <a href="/home" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-blue-600  hover:text-white">Home</a>
+              <a href="./listaMedicos" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-blue-600 hover:text-white">Medicos</a>
+              <a href="./listaPacientes" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-blue-600 hover:text-white">Pacientes</a>
+              <a href="./listaConsultas" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-blue-600 hover:text-white">Consultas</a>
+              <a href="/perfil" class="rounded-md bg-blue-600  px-3 py-2 text-sm font-medium text-white" aria-current="page">Perfil</a>
             </div>
           </div>
         </div>
         <div class="flex items-center">
-          <button id="logout-btn" class="text-white px-4 py-2 rounded-md ">
-            Logout
+          <button id="logout-btn" class=" flex gap-x-3 text-white px-4 py-2 rounded-md">
+            Logout<img src="/static/images/sair.png" alt="sair">
           </button>
         </div>
       </div>
     </div>
   </nav>
 
-  <div class="bg-white py-24 sm:px-6 sm:py-32 lg:px-8">
+  <div class="bg-blue-300 py-24 sm:px-6 sm:py-32 lg:px-8 flex-grow">
     <div class="max-w-2xl mx-auto text-center">
       <h2 class="text-3xl font-semibold text-gray-900" id="user-name">Carregando...</h2>
       <p class="mt-4 text-lg text-gray-500" id="user-email">Carregando...</p>
@@ -48,29 +52,40 @@
         <img id="user-photo" class="w-24 h-24 rounded-full mx-auto" src="" alt="Foto do Perfil" />
       </div>
 
-      <!-- Botão para Alterar Senha -->
-      <button id="change-password-btn" class="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md">Alterar Senha</button>
-
-      <!-- Formulário de Alteração de Senha -->
-      <div id="change-password-form" class="mt-6 hidden">
-        <form id="password-form" class="space-y-4">
-          <div>
-            <label for="new-password" class="block text-sm font-medium text-gray-700">Nova Senha</label>
-            <input type="password" id="new-password" name="new-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-          </div>
-          <div>
-            <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
-            <input type="password" id="confirm-password" name="confirm-password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
-          </div>
-          <div>
-            <button type="submit" class="w-full bg-green-500 text-white py-2 px-4 rounded-md">Salvar</button>
-          </div>
-        </form>
-      </div>
+      <button id="change-password-btn" class="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Alterar Senha</button>
     </div>
   </div>
 
+  <!-- Modal de alteração de senha -->
+  <div id="change-password-modal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg w-96">
+      <h3 class="text-lg font-semibold text-center mb-4">Alterar Senha</h3>
+      <form id="password-form" class="space-y-4">
+        <div>
+          <label for="new-password" class="block text-sm font-medium text-gray-700">Nova Senha</label>
+          <input type="password" id="new-password" name="new-password" class="mt-1 p-2 block w-full rounded-md border-blue-200 shadow focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+          <input type="password" id="confirm-password" name="confirm-password" class="mt-1 p-2 block w-full rounded-md border-blue-200 shadow focus:ring-blue-500 focus:border-blue-500 sm:text-sm" required>
 
+        </div>
+        <div class="flex justify-between">
+          <button type="button" id="close-modal-btn" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Fechar</button>
+          <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="bg-blue-900 text-gray-300 py-8">
+    <div class="mx-auto max-w-7xl text-center">
+      <p>&copy; 2025 ClinicFlow. Todos os direitos reservados.</p>
+      <div class="mt-4">
+        <p class="text-sm text-gray-500">Feito com todo apresso por nossa equipe de desenvolvedores.</p>
+      </div>
+    </div>
+  </footer>
 
   <script>
     // Função para obter o token do localStorage
@@ -119,10 +134,16 @@
       window.location.href = '/';
     });
 
-    // Exibe o formulário de alteração de senha
+    // Exibe o modal de alteração de senha
     document.getElementById('change-password-btn').addEventListener('click', function () {
-      const form = document.getElementById('change-password-form');
-      form.classList.toggle('hidden');
+      const modal = document.getElementById('change-password-modal');
+      modal.classList.remove('hidden');
+    });
+
+    // Fecha o modal
+    document.getElementById('close-modal-btn').addEventListener('click', function () {
+      const modal = document.getElementById('change-password-modal');
+      modal.classList.add('hidden');
     });
 
     // Evento de envio do formulário de alteração de senha
@@ -155,7 +176,7 @@
 
         if (response.ok) {
           alert('Senha alterada com sucesso!');
-          document.getElementById('change-password-form').classList.add('hidden');
+          document.getElementById('change-password-modal').classList.add('hidden');
         } else {
           alert('Erro ao alterar a senha');
         }
@@ -165,8 +186,6 @@
       }
     });
   </script>
-
-
 </body>
 
 </html>

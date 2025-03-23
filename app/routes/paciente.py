@@ -1,7 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app import models, schemas
 from app.database import SessionLocal
+from app.schemas import paciente_schema
+from app.services.paciente_service import (
+    create_paciente_service,
+    get_all_pacientes_service,
+    get_paciente_by_id_service,
+    update_paciente_service,
+    delete_paciente_service
+)
 
 router = APIRouter()
 
@@ -14,49 +21,26 @@ def get_db():
         db.close()
 
 # Rota para criar um paciente
-@router.post("/", response_model=schemas.PacienteOut)
-def create_paciente(paciente: schemas.PacienteCreate, db: Session = Depends(get_db)):
-    db_paciente = models.Paciente(nome=paciente.nome, idade=paciente.idade, historico_medico=paciente.historico_medico)
-    db.add(db_paciente)
-    db.commit()
-    db.refresh(db_paciente)
-    return db_paciente
+@router.post("/", response_model=paciente_schema.PacienteOut)
+def create_paciente(paciente: paciente_schema.PacienteCreate, db: Session = Depends(get_db)):
+    return create_paciente_service(db, paciente)
 
 # Rota para listar todos os pacientes
-@router.get("/", response_model=list[schemas.PacienteOut])
+@router.get("/", response_model=list[paciente_schema.PacienteOut])
 def get_pacientes(db: Session = Depends(get_db)):
-    pacientes = db.query(models.Paciente).all()
-    return pacientes
+    return get_all_pacientes_service(db)
 
 # Rota para obter um paciente por ID
-@router.get("/{paciente_id}", response_model=schemas.PacienteOut)
+@router.get("/{paciente_id}", response_model=paciente_schema.PacienteOut)
 def get_paciente(paciente_id: int, db: Session = Depends(get_db)):
-    paciente = db.query(models.Paciente).filter(models.Paciente.id == paciente_id).first()
-    if not paciente:
-        raise HTTPException(status_code=404, detail="Paciente não encontrado")
-    return paciente
+    return get_paciente_by_id_service(db, paciente_id)
 
 # Rota para atualizar um paciente
-@router.put("/{paciente_id}", response_model=schemas.PacienteOut)
-def update_paciente(paciente_id: int, paciente: schemas.PacienteCreate, db: Session = Depends(get_db)):
-    db_paciente = db.query(models.Paciente).filter(models.Paciente.id == paciente_id).first()
-    if not db_paciente:
-        raise HTTPException(status_code=404, detail="Paciente não encontrado")
-    
-    db_paciente.nome = paciente.nome
-    db_paciente.idade = paciente.idade
-    db_paciente.historico_medico = paciente.historico_medico
-    db.commit()
-    db.refresh(db_paciente)
-    return db_paciente
+@router.put("/{paciente_id}", response_model=paciente_schema.PacienteOut)
+def update_paciente(paciente_id: int, paciente: paciente_schema.PacienteCreate, db: Session = Depends(get_db)):
+    return update_paciente_service(db, paciente_id, paciente)
 
 # Rota para deletar um paciente
-@router.delete("/{paciente_id}", response_model=schemas.PacienteOut)
+@router.delete("/{paciente_id}", response_model=paciente_schema.PacienteOut)
 def delete_paciente(paciente_id: int, db: Session = Depends(get_db)):
-    db_paciente = db.query(models.Paciente).filter(models.Paciente.id == paciente_id).first()
-    if not db_paciente:
-        raise HTTPException(status_code=404, detail="Paciente não encontrado")
-    
-    db.delete(db_paciente)
-    db.commit()
-    return db_paciente
+    return delete_paciente_service(db, paciente_id)

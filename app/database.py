@@ -3,7 +3,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from app.config import settings  # Importa as configurações do arquivo config.py
+from app.config.config import settings  # Importa as configurações do arquivo config.py
 
 # Utilizando as variáveis de configuração da instância settings
 db_user = settings.POSTGRES_USER

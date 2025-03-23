@@ -1,8 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app import models, schemas
 from app.database import SessionLocal
-
+from app.schemas import medico_schema
+from app.services.medico_service import (
+    create_medico_service,
+    get_all_medicos_service,
+    get_medico_by_id_service,
+    update_medico_service,
+    delete_medico_service
+)
 
 router = APIRouter()
 
@@ -15,48 +21,26 @@ def get_db():
         db.close()
 
 # Rota para criar um médico
-@router.post("/", response_model=schemas.MedicoOut)
-def create_medico(medico: schemas.MedicoCreate, db: Session = Depends(get_db)):
-    db_medico = models.Medico(nome=medico.nome, especialidade=medico.especialidade)
-    db.add(db_medico)
-    db.commit()
-    db.refresh(db_medico)
-    return db_medico
+@router.post("/", response_model=medico_schema.MedicoOut)
+def create_medico(medico: medico_schema.MedicoCreate, db: Session = Depends(get_db)):
+    return create_medico_service(db, medico)
 
 # Rota para listar todos os médicos
-@router.get("/", response_model=list[schemas.MedicoOut])
+@router.get("/", response_model=list[medico_schema.MedicoOut])
 def get_medicos(db: Session = Depends(get_db)):
-    medicos = db.query(models.Medico).all()
-    return medicos
+    return get_all_medicos_service(db)
 
 # Rota para obter um médico por ID
-@router.get("/{medico_id}", response_model=schemas.MedicoOut)
+@router.get("/{medico_id}", response_model=medico_schema.MedicoOut)
 def get_medico(medico_id: int, db: Session = Depends(get_db)):
-    medico = db.query(models.Medico).filter(models.Medico.id == medico_id).first()
-    if not medico:
-        raise HTTPException(status_code=404, detail="Médico não encontrado")
-    return medico
+    return get_medico_by_id_service(db, medico_id)
 
 # Rota para atualizar um médico
-@router.put("/{medico_id}", response_model=schemas.MedicoOut)
-def update_medico(medico_id: int, medico: schemas.MedicoCreate, db: Session = Depends(get_db)):
-    db_medico = db.query(models.Medico).filter(models.Medico.id == medico_id).first()
-    if not db_medico:
-        raise HTTPException(status_code=404, detail="Médico não encontrado")
-    
-    db_medico.nome = medico.nome
-    db_medico.especialidade = medico.especialidade
-    db.commit()
-    db.refresh(db_medico)
-    return db_medico
+@router.put("/{medico_id}", response_model=medico_schema.MedicoOut)
+def update_medico(medico_id: int, medico: medico_schema.MedicoCreate, db: Session = Depends(get_db)):
+    return update_medico_service(db, medico_id, medico)
 
 # Rota para deletar um médico
-@router.delete("/{medico_id}", response_model=schemas.MedicoOut)
+@router.delete("/{medico_id}", response_model=medico_schema.MedicoOut)
 def delete_medico(medico_id: int, db: Session = Depends(get_db)):
-    db_medico = db.query(models.Medico).filter(models.Medico.id == medico_id).first()
-    if not db_medico:
-        raise HTTPException(status_code=404, detail="Médico não encontrado")
-    
-    db.delete(db_medico)
-    db.commit()
-    return db_medico
+    return delete_medico_service(db, medico_id)

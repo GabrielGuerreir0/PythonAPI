@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app.database import Base, engine
 from app.routes import paciente, medico, consulta, register, auth
 
@@ -28,6 +29,7 @@ app.add_middleware(
 templates = Jinja2Templates(directory="app/templates")
 
 # Inclui as rotas das diferentes entidades
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.include_router(paciente.router, tags=["Pacientes"], prefix="/pacientes")
 app.include_router(medico.router, tags=["Medicos"], prefix="/medicos")
 app.include_router(consulta.router, tags=["Consultas"], prefix="/consultas")

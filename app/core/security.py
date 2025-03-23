@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import models
+from app.models import user_model
 from app.database import get_db  
 
 SECRET_KEY = "sua_chave_super_secreta"
@@ -40,7 +40,7 @@ def decode_access_token(token: str):
         return None
 
 # Função para obter o usuário atual a partir do token
-def get_current_user_from_token(token: str, db: Session) -> models.User:
+def get_current_user_from_token(token: str, db: Session) -> user_model.User:
     try:
         # Decodificar o token e obter o ID do usuário
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -52,7 +52,7 @@ def get_current_user_from_token(token: str, db: Session) -> models.User:
         # Garantir que o user_id seja um número inteiro, caso seja necessári
         
         # Buscar o usuário no banco de dados
-        user = db.query(models.User).filter(models.User.username == user_id).first()
+        user = db.query(user_model.User).filter(user_model.User.username == user_id).first()
         if user is None:
             raise HTTPException(status_code=404, detail="Usuário não encontrado.")
         
