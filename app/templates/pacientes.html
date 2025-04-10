@@ -93,7 +93,31 @@
           <input type="text" id="historico_medico" name="historico_medico" class="mt-1 p-2 border w-full rounded" required>
         </div>
         <div class="text-right">
-          <button type="button" onclick="fecharModal('addModal')" class="mr-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancelar</button>
+          <button type="button" onclick="fecharModal('addModal')" class="mr-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancelar</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Modal para Editar Paciente -->
+  <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-96">
+      <h2 class="text-lg font-bold mb-4">Editar Paciente</h2>
+      <form id="form-edit">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Nome</label>
+          <input type="text" id="edit-nome" name="nome" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Idade</label>
+          <input type="number" id="edit-idade" name="idade" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Histórico Médico</label>
+          <input type="text" id="edit-historico_medico" name="historico_medico" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="text-right">
+          <button type="button" onclick="fecharModal('editModal')" class="mr-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancelar</button>
           <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar</button>
         </div>
       </form>
@@ -102,6 +126,7 @@
 
   <script>
     const apiUrl = "http://127.0.0.1:8000/pacientes";
+    let pacienteAtualId = null; // Variável para armazenar o ID do paciente em edição
 
     // Função para buscar a lista de pacientes
     async function fetchPacientes() {
@@ -121,7 +146,7 @@
               <td class="py-3 px-6">${paciente.historico_medico}</td>
               <td class="py-3 px-6 text-center">
                 <button onclick="editarPaciente(${paciente.id})" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Editar</button>
-                <button onclick="deletarPaciente(${paciente.id})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Excluir</button>
+                <button onclick="deletarPaciente(${paciente.id})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-blue-600">Excluir</button>
               </td>
             </tr>
           `;
@@ -178,42 +203,44 @@
         const response = await fetch(`${apiUrl}/${id}`);
         const paciente = await response.json();
 
+        // Armazena o ID do paciente em edição
+        pacienteAtualId = id;
+
         document.getElementById("edit-nome").value = paciente.nome;
         document.getElementById("edit-idade").value = paciente.idade;
         document.getElementById("edit-historico_medico").value = paciente.historico_medico;
 
         abrirModal('editModal');
-
-        document.getElementById("form-edit").onsubmit = async function (e) {
-          e.preventDefault();
-          const nome = document.getElementById("edit-nome").value;
-          const idade = document.getElementById("edit-idade").value;
-          const historico_medico = document.getElementById("edit-historico_medico").value;
-
-          try {
-            await fetch(`${apiUrl}/${id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ nome, idade, historico_medico })
-            });
-            fecharModal("editModal");
-            fetchPacientes();
-          } catch (error) {
-            console.error("Erro ao editar paciente:", error);
-          }
-        };
-
       } catch (error) {
         console.error("Erro ao buscar paciente:", error);
       }
     }
 
-    // Chamar função ao carregar a página
+    // Evento de submit para o formulário de edição
+    document.getElementById("form-edit").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nome = document.getElementById("edit-nome").value;
+      const idade = document.getElementById("edit-idade").value;
+      const historico_medico = document.getElementById("edit-historico_medico").value;
+
+      try {
+        await fetch(`${apiUrl}/${pacienteAtualId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome, idade, historico_medico })
+        });
+        fecharModal("editModal");
+        fetchPacientes();
+      } catch (error) {
+        console.error("Erro ao editar paciente:", error);
+      }
+    });
+
+    // Verifica se o usuário está autenticado antes de carregar a página
     function verificarAutenticacao() {
-      const token = localStorage.getItem("access_token"); // Ou sessionStorage.getItem("auth_token")
+      const token = localStorage.getItem("access_token");
       if (!token) {
-        // Se não houver token, redireciona para a tela de login
-        window.location.href = "/"; // Substitua "/login" pela URL da sua página de login
+        window.location.href = "/"; // Redireciona para a página de login
       }
     }
 

@@ -85,7 +85,28 @@
           <input type="text" id="especialidade" name="especialidade" class="mt-1 p-2 border w-full rounded" required>
         </div>
         <div class="text-right">
-          <button type="button" onclick="fecharModal('addModal')" class="mr-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancelar</button>
+          <button type="button" onclick="fecharModal('addModal')" class="mr-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancelar</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para Editar Médico -->
+  <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-96">
+      <h2 class="text-lg font-bold mb-4">Editar Médico</h2>
+      <form id="form-edit">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Nome</label>
+          <input type="text" id="edit-nome" name="nome" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Especialidade</label>
+          <input type="text" id="edit-especialidade" name="especialidade" class="mt-1 p-2 border w-full rounded" required>
+        </div>
+        <div class="text-right">
+          <button type="button" onclick="fecharModal('editModal')" class="mr-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Cancelar</button>
           <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Salvar</button>
         </div>
       </form>
@@ -94,6 +115,7 @@
 
   <script>
     const apiUrl = "http://127.0.0.1:8000/medicos";
+    let medicoAtualId = null; // Variável para armazenar o ID do médico em edição
 
     // Função para buscar a lista de médicos
     async function fetchMedicos() {
@@ -104,16 +126,16 @@
         tableBody.innerHTML = "";
         data.forEach(medico => {
           const row = `
-            <tr class="border-b border-gray-200">
-              <td class="py-3 px-6">${medico.id}</td>
-              <td class="py-3 px-6">${medico.nome}</td>
-              <td class="py-3 px-6">${medico.especialidade}</td>
-              <td class="py-3 px-6 text-center">
-                <button onclick="editarMedico(${medico.id})" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Editar</button>
-                <button onclick="deletarMedico(${medico.id})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Excluir</button>
-              </td>
-            </tr>
-          `;
+          <tr class="border-b border-gray-200">
+            <td class="py-3 px-6">${medico.id}</td>
+            <td class="py-3 px-6">${medico.nome}</td>
+            <td class="py-3 px-6">${medico.especialidade}</td>
+            <td class="py-3 px-6 text-center">
+              <button onclick="editarMedico(${medico.id})" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Editar</button>
+              <button onclick="deletarMedico(${medico.id})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Excluir</button>
+            </td>
+          </tr>
+        `;
           tableBody.insertAdjacentHTML("beforeend", row);
         });
       } catch (error) {
@@ -160,11 +182,14 @@
       }
     }
 
-    // Função para editar médico
+    // Função para editar médico (abre o modal com os dados carregados)
     async function editarMedico(id) {
       try {
         const response = await fetch(`${apiUrl}/${id}`);
         const medico = await response.json();
+
+        // Armazena o ID do médico para a atualização
+        medicoAtualId = id;
 
         document.getElementById("edit-nome").value = medico.nome;
         document.getElementById("edit-especialidade").value = medico.especialidade;
@@ -174,6 +199,25 @@
         console.error("Erro ao buscar médico:", error);
       }
     }
+
+    // Evento de submit para o formulário de edição
+    document.getElementById("form-edit").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nome = document.getElementById("edit-nome").value;
+      const especialidade = document.getElementById("edit-especialidade").value;
+
+      try {
+        await fetch(`${apiUrl}/${medicoAtualId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome, especialidade })
+        });
+        fecharModal("editModal");
+        fetchMedicos();
+      } catch (error) {
+        console.error("Erro ao atualizar médico:", error);
+      }
+    });
 
     window.onload = fetchMedicos;
   </script>

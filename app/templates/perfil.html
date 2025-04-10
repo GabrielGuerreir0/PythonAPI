@@ -6,6 +6,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <title>Perfil</title>
+  <style>
+    /* Exemplo: adicionando a imagem pilulas.png com pseudo-elementos no body */
+    .card {
+      position: relative;
+      background-color: #1e3a8a;
+      padding: 50px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      /* Garantir que o conteúdo tenha um contexto para os pseudo-elementos */
+    }
+
+    .card2 {
+      position: relative;
+      /* Garantir que o conteúdo tenha um contexto para os pseudo-elementos */
+    }
+
+    img.perfil {
+
+      background-color: white;
+      border: solid 2px white;
+      border-radius: 100px;
+    }
+
+    .card::before,
+    .card2::before {
+      content: "";
+      position: fixed;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 350px;
+      height: 350px;
+      z-index: 0;
+      opacity: 0.5;
+      /* ajuste a opacidade se desejar */
+    }
+
+    /* Exemplo: ::before posicionado no canto superior esquerdo */
+    .card::before {
+      background-image: url("/static/images/pilulas.png");
+      top: 60px;
+      left: 150px;
+    }
+
+    /* Exemplo: ::after posicionado no canto inferior direito */
+    .card2::before {
+      background-image: url("/static/images/pilulas.png");
+      bottom: 80px;
+      right: 110px;
+    }
+
+    /* Fixando o footer na base da página */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .usuario-name {
+      color: white;
+      text-transform: uppercase;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+  </style>
 </head>
 
 <body class="bg-blue-300 min-h-screen flex flex-col">
@@ -45,11 +111,11 @@
   </nav>
 
   <div class="bg-blue-300 py-24 sm:px-6 sm:py-32 lg:px-8 flex-grow">
-    <div class="max-w-2xl mx-auto text-center">
-      <h2 class="text-3xl font-semibold text-gray-900" id="user-name">Carregando...</h2>
-      <p class="mt-4 text-lg text-gray-500" id="user-email">Carregando...</p>
-      <div class="mt-8">
-        <img id="user-photo" class="w-24 h-24 rounded-full mx-auto" src="" alt="Foto do Perfil" />
+    <div class=" card max-w-2xl mx-auto text-center">
+      <h2 class="text-3xl font-semibold usuario-name" id="user-name">Carregando...</h2>
+      <p class="mt-4 text-lg text-gray-400" id="user-email">Carregando...</p>
+      <div class="card2 mt-8">
+        <img id="user-photo" class="perfil w-24 h-24 rounded-full mx-auto" src="" alt="Foto do Perfil" />
       </div>
 
       <button id="change-password-btn" class="mt-6 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Alterar Senha</button>
