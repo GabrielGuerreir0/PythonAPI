@@ -5,75 +5,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-  <title>API</title>
+  <title>ClinicFlow API</title>
   <style>
-    /* Exemplo: adicionando a imagem pilulas.png com pseudo-elementos no body */
-    .card {
-      position: relative;
-      /* Garantir que o conteúdo tenha um contexto para os pseudo-elementos */
-    }
-
-    .card2 {
-      position: relative;
-      /* Garantir que o conteúdo tenha um contexto para os pseudo-elementos */
-    }
-
-    .card::before,
-    .card2::before {
-      content: "";
-      position: fixed;
-      background-repeat: no-repeat;
-      background-size: contain;
-      width: 350px;
-      height: 350px;
-      z-index: 0;
-      opacity: 0.5;
-      /* ajuste a opacidade se desejar */
-    }
-
-    /* Exemplo: ::before posicionado no canto superior esquerdo */
-    .card::before {
-      background-image: url("/static/images/pilulas.png");
-      top: 60px;
-      left: 150px;
-    }
-
-    /* Exemplo: ::after posicionado no canto inferior direito */
-    .card2::before {
-      background-image: url("/static/images/pilulas.png");
-      bottom: 80px;
-      right: 110px;
-    }
-
-    /* Fixando o footer na base da página */
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      z-index: 10;
-    }
-
-    /* Caso deseje que o conteúdo não fique oculto atrás do footer fixo, adicione um padding-bottom */
+    /* Custom styles for darker blue theme */
     body {
-      height: max-content;
-      /* padding-bottom: 100px; */
-      /* ajuste conforme a altura do footer */
+      min-height: 100vh;
+      background: radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glassmorphism {
+      background: rgba(30, 58, 138, 0.2);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-toggle {
+      transition: transform 0.3s ease;
+    }
+
+    .nav-toggle.open {
+      transform: rotate(90deg);
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 
 <body>
-  <nav class="bg-blue-900">
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+  <nav class="bg-gradient-to-r from-indigo-900 to-blue-950 shadow-lg">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
+        <!-- Mobile menu button -->
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
-          <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-          </svg>
+          <button id="mobile-menu-btn" class="nav-toggle p-2 text-gray-200" aria-controls="mobile-menu" aria-expanded="false">
+            <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+            <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex shrink-0 items-center">
@@ -81,84 +67,84 @@
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <a href="/home" class="rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white" aria-current="page">Home</a>
-              <a href="./listaMedicos" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-blue-600 hover:text-white">Medicos</a>
-              <a href="./listaPacientes" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-blue-600 hover:text-white">Pacientes</a>
-              <a href="./listaConsultas" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-blue-600 hover:text-white">Consultas</a>
-              <!-- Novo botão de perfil -->
-              <a href="/perfil" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-blue-600 hover:text-white">Perfil</a>
+              <a href="/home" class="rounded-md bg-indigo-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition" aria-current="page">Home</a>
+              <a href="./listaMedicos" class="rounded-md px-4 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-800 hover:text-white transition">Médicos</a>
+              <a href="./listaPacientes" class="rounded-md px-4 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-800 hover:text-white transition">Pacientes</a>
+              <a href="./listaConsultas" class="rounded-md px-4 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-800 hover:text-white transition">Consultas</a>
+              <a href="/perfil" class="rounded-md px-4 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-800 hover:text-white transition">Perfil</a>
             </div>
           </div>
         </div>
         <div class="flex items-center">
-          <button id="logout-btn" class="flex gap-x-3 text-white px-4 py-2 rounded-md">
-            Logout <img src="/static/images/sair.png" alt="sair">
+          <button id="logout-btn" class="flex items-center gap-x-2 rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 transition">
+            Logout <img class="h-5 w-5" src="/static/images/sair.png" alt="Sair">
           </button>
         </div>
       </div>
     </div>
+    <!-- Mobile menu -->
+    <div class="hidden sm:hidden" id="mobile-menu">
+      <div class="space-y-1 px-2 pb-3 pt-2">
+        <a href="/home" class="block rounded-md bg-indigo-800 px-3 py-2 text-base font-medium text-white" aria-current="page">Home</a>
+        <a href="./listaMedicos" class="block rounded-md px-3 py-2 text-base font-medium text-gray-200 hover:bg-indigo-800 hover:text-white">Médicos</a>
+        <a href="./listaPacientes" class="block rounded-md px-3 py-2 text-base font-medium text-gray-200 hover:bg-indigo-800 hover:text-white">Pacientes</a>
+        <a href="./listaConsultas" class="block rounded-md px-3 py-2 text-base font-medium text-gray-200 hover:bg-indigo-800 hover:text-white">Consultas</a>
+        <a href="/perfil" class="block rounded-md px-3 py-2 text-base font-medium text-gray-200 hover:bg-indigo-800 hover:text-white">Perfil</a>
+      </div>
+    </div>
   </nav>
 
-  <!-- Restante do conteúdo -->
-  <div class=" card bg-blue-300">
-    <div class=" card2 mx-auto max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">
-      <div class="relative isolate overflow-hidden bg-blue-900 px-6 pt-16 shadow-2xl sm:rounded-3xl sm:px-16 md:pt-24 lg:gap-x-20 lg:px-24 lg:pt-0">
-        <!-- Círculo superior esquerdo -->
-        <svg viewBox="0 0 1024 1024" class="absolute top-0 left-0 -z-10 size-[64rem] translate-x-[-20%] translate-y-[-20%] [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-0 sm:-ml-80 lg:ml-0 lg:-translate-x-1/2 lg:translate-y-0" aria-hidden="true">
-          <circle cx="512" cy="512" r="512" fill="url(#759c1415-0410-454c-8f7c-9a820de03641)" fill-opacity="0.7" />
-          <defs>
-            <radialGradient id="759c1415-0410-454c-8f7c-9a820de03641">
-              <stop stop-color="cian" />
-              <stop offset="1" stop-color="green" />
-            </radialGradient>
-          </defs>
-        </svg>
-        <!-- Círculo existente -->
-        <svg viewBox="0 0 1024 1024" class="absolute left-1/2 top-1/2 -z-10 size-[64rem] -translate-y-1/2 [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-full sm:-ml-80 lg:ml-0 lg:-translate-x-1/2 lg:translate-y-0" aria-hidden="true">
-          <circle cx="512" cy="512" r="512" fill="url(#759c1415-0410-454c-8f7c-9a820de03641)" fill-opacity="0.7" />
-          <defs>
-            <radialGradient id="759c1415-0410-454c-8f7c-9a820de03641">
-              <stop stop-color="cian" />
-              <stop offset="1" stop-color="green" />
-            </radialGradient>
-          </defs>
-        </svg>
-        <div class=" mx-auto max-w-md text-center lg:flex-auto lg:py-32">
-          <img class="h-32 w-auto mx-auto" src="/static/images/ClinicFlow.png" alt="ClinicFlow">
-          <h2 class="text-balance text-3xl font-semibold tracking-tight text-white sm:text-4xl">Bem-vindo à nossa API</h2>
-          <p class="mt-6 text-pretty text-lg/8 text-gray-300">Esta API é direcionada para um sistema de gerenciamento de consultas médicas.</p>
-          <div class="mt-10 flex items-center justify-center gap-x-6">
-            <a href="/docs#" class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-blue-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Cheque as rotas</a>
-          </div>
+  <!-- Main content -->
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 fade-in">
+    <div class="relative isolate overflow-hidden glassmorphism rounded-3xl px-6 py-16 shadow-xl sm:px-16 lg:px-24">
+      <!-- Background gradient effect -->
+      <div class="absolute inset-0 -z-10 bg-gradient-to-br from-indigo-900/30 to-blue-950/30"></div>
+      <div class="mx-auto max-w-md text-center lg:max-w-lg lg:py-20">
+        <img class="h-24 w-auto mx-auto" src="/static/images/ClinicFlow.png" alt="ClinicFlow">
+        <h2 class="mt-6 text-4xl font-bold tracking-tight text-white sm:text-5xl">Bem-vindo à ClinicFlow API</h2>
+        <p class="mt-4 text-lg text-gray-300">Gerencie consultas médicas com eficiência e simplicidade através do nosso sistema integrado.</p>
+        <div class="mt-10 flex items-center justify-center gap-x-6">
+          <a href="/docs#" class="rounded-md bg-indigo-800 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition">Explorar Rotas</a>
         </div>
       </div>
     </div>
   </div>
 
-  <footer class="bg-blue-900 text-gray-300 py-8">
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-indigo-900 to-blue-950 text-gray-300 py-6 shadow-inner">
     <div class="mx-auto max-w-7xl text-center">
-      <p>&copy; 2025 ClinicFlow. Todos os direitos reservados.</p>
-      <div class="mt-4">
-        <p class="text-sm text-gray-500">Feito com todo apresso por nossa equipe de desenvolvedores.</p>
+      <p class="text-sm hover:text-white transition">© 2025 ClinicFlow. Todos os direitos reservados.</p>
+      <div class="mt-2">
+        <p class="text-xs text-gray-400 hover:text-gray-200 transition">Desenvolvido com dedicação pela equipe ClinicFlow.</p>
       </div>
     </div>
   </footer>
 
   <script>
+    // Authentication check
     function verificarAutenticacao() {
-      const token = localStorage.getItem("access_token"); // Ou sessionStorage.getItem("auth_token")
+      const token = localStorage.getItem("access_token");
       if (!token) {
-        // Se não houver token, redireciona para a tela de login
         window.location.href = "/";
       }
     }
     window.onload = function () {
       verificarAutenticacao();
-    }
-    // Adicionando o evento de logout
+    };
+
+    // Logout functionality
     document.getElementById('logout-btn').addEventListener('click', function () {
       localStorage.removeItem('access_token');
       window.location.href = '/';
+    });
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenuBtn.classList.toggle('open');
+      mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
     });
   </script>
 </body>
