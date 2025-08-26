@@ -56,13 +56,24 @@ This is a simple FastAPI application that provides CRUD operations for a healthc
 
 ## Executando a API
 
-1. Inicie o servidor:
+1. Crie o arquivo .env com as seguintes variaveis e introduza as informações:
+
+   ```bash
+   DATABASE_PORT=
+   POSTGRES_PASSWORD=
+   POSTGRES_USER=
+   POSTGRES_DB=fastapi
+   POSTGRES_HOST=
+   POSTGRES_HOSTNAME=
+   ```
+
+2. Inicie o servidor:
 
    ```bash
    uvicorn main:app --reload
    ```
 
-2. Acesse a documentação interativa no navegador:
+3. Acesse a documentação interativa no navegador:
    - Swagger UI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
    - Redoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 

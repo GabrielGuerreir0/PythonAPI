@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Perfil</title>
+  <style>
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glassmorphism {
+      background: rgba(30, 58, 138, 0.2);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-toggle {
+      transition: transform 0.3s ease;
+    }
+
+    .nav-toggle.open {
+      transform: rotate(90deg);
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide-in {
+      animation: slideIn 0.3s ease-in-out;
+    }
+
+    @keyframes slideIn {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    .btn-scale {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-scale:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.03);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .card {
+      position: relative;
+      padding: 48px;
+      border-radius: 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+      border: 2px solid transparent;
+      background: linear-gradient(to right, #1e3a8a, #1e40af) padding-box,
+        linear-gradient(to right, #4f46e5, #1e40af) border-box;
+    }
+
+    .card::before,
+    .card2::before {
+      content: "";
+      position: absolute;
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 150px;
+      height: 150px;
+      z-index: -1;
+      opacity: 0.2;
+    }
+
+    .card::before {
+      background-image: url("/static/images/pilulas.png");
+      top: 10px;
+      left: 10px;
+    }
+
+    .card2::before {
+      background-image: url("/static/images/pilulas.png");
+      bottom: 10px;
+      right: 10px;
+    }
+
+    .perfil {
+      border: 4px solid white;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      object-fit: cover;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .perfil:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .usuario-name {
+      color: white;
+      text-transform: uppercase;
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-animate {
+      animation: modalFade 0.3s ease-in-out;
+    }
+
+    @keyframes modalFade {
+      0% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 8px rgba(79, 70, 229, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 24px;
+      }
+
+      .card::before,
+      .card2::before {
+        display: none;
+      }
+
+      .usuario-name {
+        font-size: 1.75rem;
+      }
+
+      .perfil {
+        width: 96px;
+        height: 96px;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+  <nav class="bg-gradient-to-r from-indigo-900 to-blue-950 shadow-lg">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between">
+        <!-- Mobile menu button -->
+        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <button id="mobile-menu-btn" class="nav-toggle p-2 text-gray-200" aria-controls="mobile-menu" aria-expanded="false">
+            <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+            <svg class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+          <div class="flex shrink-0 items-center">
+            <img class="h-10 w-auto" src="/static/images/ClinicFlow.png" alt="ClinicFlow">
+          </div>
+          <div class="hidden sm:ml-6 sm:block">
+            <div class="flex space-x-4">
+              <a href="/home" class="rounded-md px-4 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-700 hover:text-white transition">Home</a>
+              <a href="./listaMedicos" class="rounded-md px-4 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-700 hover:text-white transition">Médicos</a>
+              <a href="./listaPacientes" class="rounded-md px-4 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-700 hover:text-white transition">Pacientes</a>
+              <a href="./listaConsultas" class="rounded-md px-4 py-2 text-sm font-medium text-gray-200 hover:bg-indigo-700 hover:text-white transition">Consultas</a>
+              <a href="/perfil" class="rounded-md bg-indigo-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 transition" aria-current="page">Perfil</a>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <button id="logout-btn" class="flex items-center gap-x-2 rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-600 transition btn-scale">
+            Logout <img class="h-5 w-5" src="/static/images/sair.png" alt="Sair">
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div class="hidden sm:hidden" id="mobile-menu">
+      <div class="space-y-1 px-2 pb-3 pt-2 slide-in">
+        <a href="/home" class="block rounded-md px-3 py-2 text-base font-medium text-gray-200 hover:bg-indigo-700 hover:text-white">Home</a>
+        <a href="./listaMedicos" class="block rounded-md px-3 py-2 text-base font-medium text-gray-200 hover:bg-indigo-700 hover:text-white">Médicos</a>
+        <a href="./listaPacientes" class="block rounded-md px-3 py-2 text-base font-medium text-gray-200 hover:bg-indigo-700 hover:text-white">Pacientes</a>
+        <a href="./listaConsultas" class="block rounded-md px-3 py-2 text-base font-medium text-gray-200 hover:bg-indigo-700 hover:text-white">Consultas</a>
+        <a href="/perfil" class="block rounded-md bg-indigo-800 px-3 py-2 text-base font-medium text-white" aria-current="page">Perfil</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="py-16 sm:py-24 lg:py-32 flex-grow flex items-center justify-center">
+    <div class="card glassmorphism max-w-xl mx-auto text-center fade-in">
+      <div class="card2">
+        <img id="user-photo" class="perfil w-36 h-36 rounded-full mx-auto mb-6" src="" alt="Foto do Perfil" />
+      </div>
+      <h2 class="text-3xl font-semibold usuario-name" id="user-name">Carregando...</h2>
+      <p class="mt-4 text-lg text-gray-100" id="user-email">Carregando...</p>
+      <button id="change-password-btn" class="mt-8 bg-indigo-800 text-white px-6 py-3 rounded-lg shadow-sm hover:bg-indigo-700 transition btn-scale pulse">Alterar Senha</button>
+    </div>
+  </div>
+
+  <!-- Modal de alteração de senha -->
+  <div id="change-password-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="glassmorphism p-8 rounded-lg w-full max-w-md modal-animate">
+      <h3 class="text-xl font-semibold text-white text-center mb-6">Alterar Senha</h3>
+      <form id="password-form" class="space-y-6">
+        <div>
+          <label for="new-password" class="block text-sm font-medium text-gray-200">Nova Senha</label>
+          <input type="password" id="new-password" name="new-password" class="mt-1 p-3 block w-full rounded-md border-gray-600 bg-indigo-900/50 text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+        </div>
+        <div>
+          <label for="confirm-password" class="block text-sm font-medium text-gray-200">Confirmar Senha</label>
+          <input type="password" id="confirm-password" name="confirm-password" class="mt-1 p-3 block w-full rounded-md border-gray-600 bg-indigo-900/50 text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+        </div>
+        <div class="flex justify-between">
+          <button type="button" id="close-modal-btn" class="bg-red-700 text-white px-5 py-2.5 rounded-lg hover:bg-red-600 transition btn-scale">Fechar</button>
+          <button type="submit" class="bg-indigo-800 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition btn-scale">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="bg-gradient-to-r from-indigo-900 to-blue-950 text-gray-300 py-6 shadow-inner">
+    <div class="mx-auto max-w-7xl text-center">
+      <p class="text-base hover:text-white transition">© 2025 ClinicFlow. Todos os direitos reservados.</p>
+      <div class="mt-2">
+        <p class="text-smテキスト-gray-400 hover:text-gray-200 transition">Desenvolvido com dedicação pela equipe ClinicFlow.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Função para obter o token do localStorage
+    const token = localStorage.getItem('access_token');
+
+    // Função para buscar as informações do usuário usando o token
+    async function fetchUserProfile() {
+      if (token) {
+        try {
+          const response = await fetch(`cadastrar/me/${token}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error('Erro ao obter informações do usuário');
+          }
+
+          const userData = await response.json();
+
+          // Atualizar os elementos da página com as informações do usuário
+          document.getElementById('user-name').textContent = userData.full_name || 'Nome não disponível';
+          document.getElementById('user-email').textContent = userData.email || 'Email não disponível';
+          document.getElementById('user-photo').src = userData.profile_image ? 'data:image/jpeg;base64,' + userData.profile_image : '/images/default-avatar.jpg';
+
+          // Salvar o ID do usuário para atualização posterior
+          window.userId = userData.id;
+
+        } catch (error) {
+          console.error('Erro:', error);
+        }
+      } else {
+        window.location.href = '/';
+      }
+    }
+
+    // Chama a função para carregar as informações do perfil
+    fetchUserProfile();
+
+    // Evento de logout
+    document.getElementById('logout-btn').addEventListener('click', function () {
+      localStorage.removeItem('access_token');
+      window.location.href = '/';
+    });
+
+    // Exibe o modal de alteração de senha
+    document.getElementById('change-password-btn').addEventListener('click', function () {
+      const modal = document.getElementById('change-password-modal');
+      modal.classList.remove('hidden');
+      // Remove pulse animation after click
+      document.getElementById('change-password-btn').classList.remove('pulse');
+    });
+
+    // Fecha o modal
+    document.getElementById('close-modal-btn').addEventListener('click', function () {
+      const modal = document.getElementById('change-password-modal');
+      modal.classList.add('hidden');
+    });
+
+    // Evento de envio do formulário de alteração de senha
+    document.getElementById('password-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (newPassword !== confirmPassword) {
+        alert('As senhas não coincidem');
+        return;
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('password', newPassword);
+
+        const response = await fetch(`/cadastrar/users/${window.userId}/password`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+          body: formData
+        });
+
+        if (response.ok) {
+          alert('Senha alterada com sucesso!');
+          document.getElementById('change-password-modal').classList.add('hidden');
+        } else {
+          alert('Erro ao alterar a senha');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao alterar a senha');
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenuBtn.classList.toggle('open');
+      mobileMenuBtn.querySelectorAll('svg').forEach(svg => svg.classList.toggle('hidden'));
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro e Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .glassmorphism {
+      background: rgba(30, 58, 138, 0.25);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+      position: relative;
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      border: 2px solid transparent;
+      background: linear-gradient(to right, #1e3a8a, #1e40af) padding-box,
+        linear-gradient(to right, #4f46e5, #1e40af) border-box;
+    }
+
+    .card::before,
+    .card::after {
+      content: "";
+      position: absolute;
+      background-image: url("static/images/pilulas.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      width: 120px;
+      height: 120px;
+      z-index: -1;
+      opacity: 0;
+      animation: fadeInDecor 1.5s ease-in-out forwards;
+    }
+
+    .card::before {
+      top: 20px;
+      left: 20px;
+      animation-delay: 0.3s;
+    }
+
+    .card::after {
+      bottom: 20px;
+      right: 20px;
+      animation-delay: 0.6s;
+    }
+
+    @keyframes fadeInDecor {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      100% {
+        opacity: 0.25;
+        transform: scale(1);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide-left {
+      animation: slideLeft 0.4s ease-in-out;
+    }
+
+    .slide-right {
+      animation: slideRight 0.4s ease-in-out;
+    }
+
+    @keyframes slideLeft {
+      0% {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideRight {
+      0% {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .btn-scale {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-scale:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.03);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .logo {
+      animation: bounce 1s ease-in-out;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: rotate(5deg);
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+
+      60% {
+        transform: translateY(5px);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    input {
+      transition: all 0.2s ease;
+    }
+
+    input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 10px rgba(79, 70, 229, 0.6);
+    }
+
+    input:valid {
+      border-color: #10b981;
+    }
+
+    input:invalid:not(:placeholder-shown) {
+      border-color: #ef4444;
+    }
+
+    .file-label {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #4b5563;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .file-label:hover {
+      background: #6b7280;
+      transform: scale(1.02);
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 24px;
+      }
+
+      .card::before,
+      .card::after {
+        display: none;
+      }
+
+      .logo {
+        height: 80px;
+      }
+
+      h2 {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="w-full max-w-md card glassmorphism fade-in">
+    <!-- Formulário de Login -->
+    <div id="login-form" class="space-y-6">
+      <img class="h-24 w-auto mx-auto logo" src="static/images/ClinicFlow.png" alt="ClinicFlow">
+      <h2 class="text-3xl font-semibold text-center text-white">Bem-vindo</h2>
+      <div>
+        <label for="login-username" class="block text-sm font-medium text-gray-200">Usuário</label>
+        <input id="login-username" type="text" class="mt-2 p-3 w-full border border-gray-600 bg-indigo-900/50 text-white rounded-lg" placeholder="Digite seu usuário" required>
+      </div>
+      <div>
+        <label for="login-password" class="block text-sm font-medium text-gray-200">Senha</label>
+        <input id="login-password" type="password" class="mt-2 p-3 w-full border border-gray-600 bg-indigo-900/50 text-white rounded-lg" placeholder="Digite sua senha" required>
+      </div>
+      <button id="login-btn" class="w-full bg-gradient-to-r from-indigo-800 to-blue-900 text-white py-3 rounded-lg hover:from-indigo-700 hover:to-blue-800 transition btn-scale pulse" aria-label="Entrar">Login</button>
+      <p class="text-center text-sm text-gray-300 mt-4">Não tem uma conta? <a href="#" id="switch-to-register" class="text-indigo-400 hover:text-indigo-300 hover:underline transition" aria-label="Ir para cadastro">Cadastre-se</a></p>
+    </div>
+
+    <!-- Formulário de Cadastro -->
+    <div id="register-form" class="space-y-6 hidden slide-left">
+      <h2 class="text-3xl font-semibold text-center text-white">Cadastro</h2>
+      <div>
+        <label for="register-fullname" class="block text-sm font-medium text-gray-200">Nome Completo</label>
+        <input id="register-fullname" type="text" class="mt-2 p-3 w-full border border-gray-600 bg-indigo-900/50 text-white rounded-lg" placeholder="Digite seu nome completo" required>
+      </div>
+      <div>
+        <label for="register-username" class="block text-sm font-medium text-gray-200">Usuário</label>
+        <input id="register-username" type="text" class="mt-2 p-3 w-full border border-gray-600 bg-indigo-900/50 text-white rounded-lg" placeholder="Escolha seu usuário" required>
+      </div>
+      <div>
+        <label for="register-email" class="block text-sm font-medium text-gray-200">Email</label>
+        <input id="register-email" type="email" class="mt-2 p-3 w-full border border-gray-600 bg-indigo-900/50 text-white rounded-lg" placeholder="Digite seu email" required>
+      </div>
+      <div>
+        <label for="register-password" class="block text-sm font-medium text-gray-200">Senha</label>
+        <input id="register-password" type="password" class="mt-2 p-3 w-full border border-gray-600 bg-indigo-900/50 text-white rounded-lg" placeholder="Escolha sua senha" required>
+      </div>
+      <div>
+        <label for="register-profile-image" class="block text-sm font-medium text-gray-200">Foto de Perfil (opcional)</label>
+        <input id="register-profile-image" type="file" accept="image/*" class="hidden">
+        <label for="register-profile-image" class="file-label mt-2">Escolher Imagem</label>
+      </div>
+      <button id="register-btn" class="w-full bg-gradient-to-r from-indigo-800 to-blue-900 text-white py-3 rounded-lg hover:from-indigo-700 hover:to-blue-800 transition btn-scale" aria-label="Cadastrar">Cadastrar</button>
+      <p class="text-center text-sm text-gray-300 mt-4">Já tem uma conta? <a href="#" id="switch-to-login" class="text-indigo-400 hover:text-indigo-300 hover:underline transition" aria-label="Ir para login">Faça login</a></p>
+    </div>
+  </div>
+
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginForm = document.getElementById("login-form");
+      const registerForm = document.getElementById("register-form");
+      const switchToRegister = document.getElementById("switch-to-register");
+      const switchToLogin = document.getElementById("switch-to-login");
+      const loginBtn = document.getElementById("login-btn");
+      const registerBtn = document.getElementById("register-btn");
+
+      if (localStorage.getItem("access_token")) {
+        window.location.href = "/home";
+      }
+
+      switchToRegister.addEventListener("click", (e) => {
+        e.preventDefault();
+        loginForm.classList.add("hidden");
+        loginForm.classList.remove("slide-right");
+        registerForm.classList.remove("hidden");
+        registerForm.classList.add("slide-left");
+      });
+
+      switchToLogin.addEventListener("click", (e) => {
+        e.preventDefault();
+        registerForm.classList.add("hidden");
+        registerForm.classList.remove("slide-left");
+        loginForm.classList.remove("hidden");
+        loginForm.classList.add("slide-right");
+      });
+
+      loginBtn.addEventListener("click", async () => {
+        const username = document.getElementById("login-username").value;
+        const password = document.getElementById("login-password").value;
+
+        if (!username || !password) {
+          alert("Preencha todos os campos!");
+          return;
+        }
+
+        try {
+          const response = await fetch("http://localhost:8000/login/token", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+              username: username,
+              password: password,
+            }),
+          });
+
+          const data = await response.json();
+          if (response.ok) {
+            alert("Login bem-sucedido!");
+            localStorage.setItem("access_token", data.access_token);
+            window.location.href = "/home";
+          } else {
+            alert(`Erro: ${data.detail}`);
+          }
+        } catch (error) {
+          alert("Erro ao fazer login. Tente novamente.");
+          console.error("Erro:", error);
+        }
+      });
+
+      registerBtn.addEventListener("click", async () => {
+        const fullName = document.getElementById("register-fullname").value;
+        const username = document.getElementById("register-username").value;
+        const email = document.getElementById("register-email").value;
+        const password = document.getElementById("register-password").value;
+        const profileImage = document.getElementById("register-profile-image").files[0];
+
+        if (!fullName || !username || !email || !password) {
+          alert("Preencha todos os campos obrigatórios!");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("full_name", fullName);
+        formData.append("username", username);
+        formData.append("email", email);
+        formData.append("password", password);
+        if (profileImage) {
+          formData.append("profile_image", profileImage);
+        }
+
+        try {
+          const response = await fetch("http://localhost:8000/cadastrar/register", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await response.json();
+          if (response.ok) {
+            alert("Cadastro bem-sucedido!");
+            loginForm.classList.remove("hidden");
+            loginForm.classList.add("slide-right");
+            registerForm.classList.add("hidden");
+            registerForm.classList.remove("slide-left");
+          } else {
+            alert(`Erro: ${data.detail}`);
+          }
+        } catch (error) {
+          alert("Erro ao cadastrar. Tente novamente.");
+          console.error("Erro:", error);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
