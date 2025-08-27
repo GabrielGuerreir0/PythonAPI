@@ -56,7 +56,7 @@ def update_consulta_service(db: Session, consulta_id: int, consulta: consulta_sc
 def delete_consulta_service(db: Session, consulta_id: int):
     db_consulta = db.query(consulta_model.Consulta).filter(consulta_model.Consulta.id == consulta_id).first()
     if not db_consulta:
-        raise HTTPException(status_code=404, detail="Consulta não encontrada")
+        raise HTTPException(status_code=404, detail="Consulta não Existe")
     
     db.delete(db_consulta)
     db.commit()
